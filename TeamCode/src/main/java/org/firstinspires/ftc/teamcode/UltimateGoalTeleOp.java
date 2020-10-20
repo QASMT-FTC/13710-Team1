@@ -15,11 +15,13 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
     // Declare OpMode members
     private ElapsedTime runtime = new ElapsedTime();
+
     private DcMotor frontLeftDrive = null;
     private DcMotor frontRightDrive = null;
     private DcMotor backLeftDrive = null;
     private DcMotor backRightDrive = null;
 
+    private DcMotor wobbleLiftMotor = null;
 
     @Override
     public void runOpMode() {
@@ -35,12 +37,20 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         backLeftDrive  = hardwareMap.get(DcMotor.class, "backLeftDrive");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRightDrive");
 
+        wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLeftMotor");
+
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        wobbleLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        //create TrigDrive objects
+        TrigDrive drive = new TrigDrive();
+        double[] speeds = new double[4];
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -53,14 +63,22 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             double  G1LeftStickY  = gamepad1.left_stick_y;
             double  G1LeftStickX  = gamepad1.left_stick_x;
             double  G1RightStickX = gamepad1.right_stick_x;
+            double  G2LeftStickY = gamepad2.left_stick_y;
 
-            // strafe Mode (allows sideways motion)
-            frontLeftDrive.setPower(G1LeftStickY + G1RightStickX + G1LeftStickX);
-            backLeftDrive.setPower(G1LeftStickY + G1RightStickX - G1LeftStickX);
-            backRightDrive.setPower(G1LeftStickY + G1RightStickX + G1LeftStickX);
-            frontRightDrive.setPower(G1LeftStickY + G1RightStickX - G1LeftStickX);
+//            // strafe Mode (allows sideways motion)
+//            frontLeftDrive.setPower(G1LeftStickY + G1RightStickX + G1LeftStickX);
+//            backLeftDrive.setPower(G1LeftStickY + G1RightStickX - G1LeftStickX);
+//            backRightDrive.setPower(G1LeftStickY + G1RightStickX + G1LeftStickX);
+//            frontRightDrive.setPower(G1LeftStickY + G1RightStickX - G1LeftStickX);
 
+            // trig drive
+            speeds = drive.motorSpeeds(G1LeftStickY, G1RightStickX*(Math.PI/2), G1LeftStickX);
+            frontLeftDrive.setPower(speeds[0]);
+            backLeftDrive.setPower(speeds[1]);
+            backRightDrive.setPower(speeds[2]);
+            frontRightDrive.setPower(speeds[3]);
 
+            ithubwobbleLiftMotor.setPower(G2LeftStickY);
 
         }
     }
