@@ -90,6 +90,9 @@ class TrigDrive {
     public static double calc1 (double Vd, double Td, double Vt) {
 
         double V;
+        if (Vd == 0 && Td > 0) {
+            Vd = Td/2;
+        }
         V = Vd * Math.sin(Td + (Math.PI / 4)) + Vt;
         return V;
 
@@ -98,6 +101,9 @@ class TrigDrive {
     public static double calc2 (double Vd, double Td, double Vt) {
 
         double V;
+        if (Vd == 0 && Td > 0) {
+            Vd = Td/2;
+        }
         V = Vd * Math.cos(Td + (Math.PI /4 )) + Vt;
         return V;
 
