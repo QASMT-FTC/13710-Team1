@@ -78,7 +78,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             backRightDrive.setPower(speeds[2]);
             frontRightDrive.setPower(speeds[3]);
 
-            ithubwobbleLiftMotor.setPower(G2LeftStickY);
+            wobbleLiftMotor.setPower(G2LeftStickY);
 
         }
     }
