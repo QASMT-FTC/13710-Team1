@@ -22,6 +22,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     private DcMotor backRightDrive = null;
 
     private DcMotor wobbleLiftMotor = null;
+    private DcMotor intakeDriveMotor = null;
 
     @Override
     public void runOpMode() {
@@ -38,6 +39,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         backRightDrive = hardwareMap.get(DcMotor.class, "backRightDrive");
 
         wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLeftMotor");
+        intakeDriveMotor = hardwareMap.get(DcMotor.class, "intakeDriveMotor");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -47,6 +49,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         wobbleLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        intakeDriveMotor.setDirection(DcMotor.Direction.FORWARD);
 
         //create TrigDrive objects
         TrigDrive drive = new TrigDrive();
@@ -63,7 +66,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             double  G1LeftStickY  = gamepad1.left_stick_y;
             double  G1LeftStickX  = gamepad1.left_stick_x;
             double  G1RightStickX = gamepad1.right_stick_x;
-            double  G2LeftStickY = gamepad2.left_stick_y;
+            double  G2LeftStickY  = gamepad2.left_stick_y;
+            double  G2RightStickX = gamepad2.left_stick_x;
 
 //            // strafe Mode (allows sideways motion)
 //            frontLeftDrive.setPower(G1LeftStickY + G1RightStickX + G1LeftStickX);
@@ -79,6 +83,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             frontRightDrive.setPower(speeds[3]);
 
             wobbleLiftMotor.setPower(G2LeftStickY);
+            intakeDriveMotor.setPower(G2RightStickX);
+
 
         }
     }
