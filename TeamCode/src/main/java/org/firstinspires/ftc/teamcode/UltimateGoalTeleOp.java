@@ -38,7 +38,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         backLeftDrive  = hardwareMap.get(DcMotor.class, "backLeftDrive");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRightDrive");
 
-        wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLeftMotor");
+        wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLiftMotor");
         intakeDriveMotor = hardwareMap.get(DcMotor.class, "intakeDriveMotor");
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -76,11 +76,18 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 //            frontRightDrive.setPower(G1LeftStickY + G1RightStickX - G1LeftStickX);
 
             // trig drive
-            speeds = drive.motorSpeeds(G1LeftStickY, G1RightStickX*(Math.PI/2), G1LeftStickX);
-            frontLeftDrive.setPower(speeds[0]);
-            backLeftDrive.setPower(speeds[1]);
-            backRightDrive.setPower(speeds[2]);
-            frontRightDrive.setPower(speeds[3]);
+//            speeds = drive.motorSpeeds(G1LeftStickY, G1RightStickX*(Math.PI/2), G1LeftStickX);
+//            frontLeftDrive.setPower(speeds[0]);
+//            backLeftDrive.setPower(speeds[1]);
+//            backRightDrive.setPower(speeds[2]);
+//            frontRightDrive.setPower(speeds[3]);
+
+            double angle = Math.atan(G1LeftStickY/G1LeftStickX); //using trig
+            frontRightDrive.setPower(Math.sin(angle-1/(4*Math.PI)));
+            backLeftDrive.setPower(Math.sin(angle-1/(4*Math.PI)));
+            frontLeftDrive.setPower(Math.sin(angle+1/(4*Math.PI)));
+            backRightDrive.setPower(Math.sin(angle+1/(4*Math.PI)));
+
 
             wobbleLiftMotor.setPower(G2LeftStickY);
             intakeDriveMotor.setPower(G2RightStickX);
