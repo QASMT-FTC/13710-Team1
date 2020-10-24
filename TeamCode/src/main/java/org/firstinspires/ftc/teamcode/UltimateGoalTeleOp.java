@@ -24,11 +24,24 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     private DcMotor wobbleLiftMotor = null;
     private DcMotor intakeDriveMotor = null;
 
+    private double  G1LeftStickY;
+    private double  G1LeftStickX;
+    private double  G1RightStickX;
+    private double  G2LeftStickY;
+    private double  G2RightStickX;
+
+    private double  angle;
+    private double  magnitude;
+    private double  powers[];
+
+
     @Override
     public void runOpMode() {
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
+        powers = new double[4];
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -51,10 +64,6 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         wobbleLiftMotor.setDirection(DcMotor.Direction.FORWARD);
         intakeDriveMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        //create TrigDrive objects
-        TrigDrive drive = new TrigDrive();
-        double[] speeds = new double[4];
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -63,24 +72,13 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
 
             // setup the inputs
-            double  G1LeftStickY  = gamepad1.left_stick_y;
-            double  G1LeftStickX  = gamepad1.left_stick_x;
-            double  G1RightStickX = gamepad1.right_stick_x;
-            double  G2LeftStickY  = gamepad2.left_stick_y;
-            double  G2RightStickX = gamepad2.left_stick_x;
+            G1LeftStickY  = gamepad1.left_stick_y;
+            G1LeftStickX  = gamepad1.left_stick_x;
+            G1RightStickX = gamepad1.right_stick_x;
 
-//            // strafe Mode (allows sideways motion)
-//            frontLeftDrive.setPower(G1LeftStickY + G1RightStickX + G1LeftStickX);
-//            backLeftDrive.setPower(G1LeftStickY + G1RightStickX - G1LeftStickX);
-//            backRightDrive.setPower(G1LeftStickY + G1RightStickX + G1LeftStickX);
-//            frontRightDrive.setPower(G1LeftStickY + G1RightStickX - G1LeftStickX);
+            G2LeftStickY  = gamepad2.left_stick_y;
+            G2RightStickX = gamepad2.left_stick_x;
 
-            // trig drive
-            speeds = drive.motorSpeeds(G1LeftStickY, G1RightStickX*(Math.PI/2), G1LeftStickX);
-            frontLeftDrive.setPower(speeds[0]);
-            backLeftDrive.setPower(speeds[1]);
-            backRightDrive.setPower(speeds[2]);
-            frontRightDrive.setPower(speeds[3]);
 
 //            double angle = Math.atan(G1LeftStickY/G1LeftStickX); //using trig
 //            frontRightDrive.setPower(Math.sin(angle-1/(4*Math.PI)));
@@ -88,10 +86,31 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 //            frontLeftDrive.setPower(Math.sin(angle+1/(4*Math.PI)));
 //            backRightDrive.setPower(Math.sin(angle+1/(4*Math.PI)));
 
+//            if (gamepad1.a) {
+//
+//            } else {
+//
+//            }
+
+            angle = Math.atan2(G1LeftStickY, G1LeftStickX);
+            magnitude = Math.sqrt(Math.pow(G1LeftStickY,2)+Math.pow(G1LeftStickX,2));
+
+            for (int i = 0; i < 4; i ++) {
+
+                powers[i] = Math.sin(angle + Math.pow(-1, i) * Math.PI/4 * magnitude); //change i to i+1 or i-1
+
+            }
+
 
             wobbleLiftMotor.setPower(G2LeftStickY);
             intakeDriveMotor.setPower(G2RightStickX);
 
+            telemetry.addData("Angle: ", angle);
+            telemetry.addData("Magnitude: ", magnitude);
+            for (int i = 0; i < 4; i ++ ) {
+                telemetry.addData("Powers " + i + ":", powers[i]);
+            }
+            telemetry.update();
 
         }
     }
