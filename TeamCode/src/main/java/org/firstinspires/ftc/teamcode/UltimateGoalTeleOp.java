@@ -54,6 +54,11 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLiftMotor");
         intakeDriveMotor = hardwareMap.get(DcMotor.class, "intakeDriveMotor");
 
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -79,28 +84,24 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             G2LeftStickY  = gamepad2.left_stick_y;
             G2RightStickX = gamepad2.left_stick_x;
 
+            angle = Math.atan2(G1LeftStickX, -G1LeftStickY);
+            magnitude = Math.sqrt(Math.pow(G1LeftStickY,2)+Math.pow(G1LeftStickX,2));
 
-//            double angle = Math.atan(G1LeftStickY/G1LeftStickX); //using trig
-//            frontRightDrive.setPower(Math.sin(angle-1/(4*Math.PI)));
-//            backLeftDrive.setPower(Math.sin(angle-1/(4*Math.PI)));
-//            frontLeftDrive.setPower(Math.sin(angle+1/(4*Math.PI)));
-//            backRightDrive.setPower(Math.sin(angle+1/(4*Math.PI)));
-
-//            if (gamepad1.a) {
+//            for (int i = 0; i < 4; i ++) {
 //
-//            } else {
+//                powers[i] = Math.cos(angle + Math.pow(-1, i) * Math.PI/4) * magnitude; //change i to i+1 or i-1 if strafing does not work
 //
 //            }
 
-            angle = Math.atan2(G1LeftStickY, G1LeftStickX);
-            magnitude = Math.sqrt(Math.pow(G1LeftStickY,2)+Math.pow(G1LeftStickX,2));
+            powers[0] = Math.cos(angle + (1) * Math.PI/4) * magnitude;
+            powers[1] = Math.cos(angle + (-1) * Math.PI/4) * magnitude;
+            powers[2] = Math.cos(angle + (1) * Math.PI/4) * magnitude;
+            powers[3] = Math.cos(angle + (-1) * Math.PI/4) * magnitude;
 
-            for (int i = 0; i < 4; i ++) {
-
-                powers[i] = Math.sin(angle + Math.pow(-1, i) * Math.PI/4 * magnitude); //change i to i+1 or i-1
-
-            }
-
+            frontLeftDrive.setPower(powers[0]);
+            frontRightDrive.setPower(powers[1]);
+            backLeftDrive.setPower(powers[2]);
+            backRightDrive.setPower(powers[3]);
 
             wobbleLiftMotor.setPower(G2LeftStickY);
             intakeDriveMotor.setPower(G2RightStickX);
