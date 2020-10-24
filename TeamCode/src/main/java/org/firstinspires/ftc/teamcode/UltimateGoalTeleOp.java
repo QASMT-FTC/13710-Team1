@@ -76,17 +76,17 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 //            frontRightDrive.setPower(G1LeftStickY + G1RightStickX - G1LeftStickX);
 
             // trig drive
-//            speeds = drive.motorSpeeds(G1LeftStickY, G1RightStickX*(Math.PI/2), G1LeftStickX);
-//            frontLeftDrive.setPower(speeds[0]);
-//            backLeftDrive.setPower(speeds[1]);
-//            backRightDrive.setPower(speeds[2]);
-//            frontRightDrive.setPower(speeds[3]);
+            speeds = drive.motorSpeeds(G1LeftStickY, G1RightStickX*(Math.PI/2), G1LeftStickX);
+            frontLeftDrive.setPower(speeds[0]);
+            backLeftDrive.setPower(speeds[1]);
+            backRightDrive.setPower(speeds[2]);
+            frontRightDrive.setPower(speeds[3]);
 
-            double angle = Math.atan(G1LeftStickY/G1LeftStickX); //using trig
-            frontRightDrive.setPower(Math.sin(angle-1/(4*Math.PI)));
-            backLeftDrive.setPower(Math.sin(angle-1/(4*Math.PI)));
-            frontLeftDrive.setPower(Math.sin(angle+1/(4*Math.PI)));
-            backRightDrive.setPower(Math.sin(angle+1/(4*Math.PI)));
+//            double angle = Math.atan(G1LeftStickY/G1LeftStickX); //using trig
+//            frontRightDrive.setPower(Math.sin(angle-1/(4*Math.PI)));
+//            backLeftDrive.setPower(Math.sin(angle-1/(4*Math.PI)));
+//            frontLeftDrive.setPower(Math.sin(angle+1/(4*Math.PI)));
+//            backRightDrive.setPower(Math.sin(angle+1/(4*Math.PI)));
 
 
             wobbleLiftMotor.setPower(G2LeftStickY);
@@ -98,49 +98,3 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
 }
 
-class TrigDrive {
-
-    public static double calc1 (double Vd, double Td, double Vt) {
-
-        double V;
-        if (Vd == 0 && Td > 0) {
-            Vd = Td/2;
-        }
-        V = Vd * Math.sin(Td + (Math.PI / 4)) + Vt;
-        return V;
-
-    }
-
-    public static double calc2 (double Vd, double Td, double Vt) {
-
-        double V;
-        if (Vd == 0 && Td > 0) {
-            Vd = Td/2;
-        }
-        V = Vd * Math.cos(Td + (Math.PI /4 )) + Vt;
-        return V;
-
-    }
-
-    public static double[] motorSpeeds (double Vd, double Td, double Vt) {
-
-        /*
-            Vd: robot speed between -1 and 1
-            Td: robot angle
-                0 = straight on
-                Pi/2 = 90 degrees -> so to the right
-            Vt: directional speed (strafing) between -1 and 1
-         */
-
-        double[] vArr = new double[4];
-
-        vArr[0] = calc1(Vd, Td, Vt);
-        vArr[1] = calc2(Vd, Td, Vt);
-        vArr[2] = calc2(Vd, Td, Vt);
-        vArr[3] = calc1(Vd, Td, Vt);
-
-        return vArr;
-
-    }
-
-}
