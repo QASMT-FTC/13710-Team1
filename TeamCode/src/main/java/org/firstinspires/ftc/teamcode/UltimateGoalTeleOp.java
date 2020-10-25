@@ -13,7 +13,6 @@ import java.lang.Math.*;
 //@Disabled /*disables the class so it cannot be selected from the list*/
 public class UltimateGoalTeleOp extends LinearOpMode {
 
-    // Declare OpMode members
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor frontLeftDrive = null;
@@ -43,9 +42,10 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
         powers = new double[4];
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
+
+        /* ROBOT HARDWARE */
+
+        //second parameter is used in config
         frontLeftDrive  = hardwareMap.get(DcMotor.class, "frontLeftDrive");
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRightDrive");
         backLeftDrive  = hardwareMap.get(DcMotor.class, "backLeftDrive");
@@ -59,8 +59,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
+        //set direction of motors
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -69,11 +68,13 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         wobbleLiftMotor.setDirection(DcMotor.Direction.FORWARD);
         intakeDriveMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        // Wait for the game to start (driver presses PLAY)
+        /* END ROBOT HARDWARE */
+
+
+        //wait for start
         waitForStart();
         runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             // setup the inputs
@@ -86,12 +87,6 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
             angle = Math.atan2(G1LeftStickX, -G1LeftStickY);
             magnitude = Math.sqrt(Math.pow(G1LeftStickY,2)+Math.pow(G1LeftStickX,2));
-
-//            for (int i = 0; i < 4; i ++) {
-//
-//                powers[i] = Math.cos(angle + Math.pow(-1, i) * Math.PI/4) * magnitude; //change i to i+1 or i-1 if strafing does not work
-//
-//            }
 
             powers[0] = Math.cos(angle + (1) * Math.PI/4) * magnitude;
             powers[1] = Math.cos(angle + (-1) * Math.PI/4) * magnitude;
