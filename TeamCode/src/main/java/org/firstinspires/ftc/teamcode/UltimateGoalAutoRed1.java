@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class UltimateGoalAutoRed1 extends AutoController {
 
     private ElapsedTime runtime = new ElapsedTime();
-    private AutoController controller;
 
 
     @Override
@@ -16,7 +15,7 @@ public class UltimateGoalAutoRed1 extends AutoController {
         telemetry.addData("Status: ", "initialised");
         telemetry.update();
 
-        controller.initController();
+        initController();
 
         /* ROBOT HARDWARE */
 
@@ -29,7 +28,7 @@ public class UltimateGoalAutoRed1 extends AutoController {
         //used for testing purposes currently
         while (opModeIsActive()) {
 
-            controller.openPipeline();
+            openPipeline();
 
         }
 
