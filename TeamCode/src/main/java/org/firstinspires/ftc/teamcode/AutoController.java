@@ -61,6 +61,13 @@ public abstract class AutoController extends LinearOpMode {
 
             }
 
+//            int rings;
+//            if (updatedRecognitions == null) {
+//                rings = 0;
+//            } else {
+//                rings = updatedRecognitions.size();
+//            }
+
         }
 
     }
