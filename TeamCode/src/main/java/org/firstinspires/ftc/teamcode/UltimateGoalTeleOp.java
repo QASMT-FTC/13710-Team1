@@ -15,18 +15,28 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor frontLeftDrive = null;
-    private DcMotor frontRightDrive = null;
-    private DcMotor backLeftDrive = null;
-    private DcMotor backRightDrive = null;
+    private DcMotor frontLeftDrive;
+    private DcMotor frontRightDrive;
+    private DcMotor backLeftDrive;
+    private DcMotor backRightDrive;
 
-    private DcMotor wobbleLiftMotor = null;
-    private DcMotor intakeDriveMotor = null;
+    private DcMotor wobbleLiftMotor;
+    private DcMotor intakeDriveMotor;
+
+    private Servo   elbowServo;
+    private Servo   gripServo;
 
     private double  angle;
     private double  robotAngle;
     private double  powers[];
     private double  rightX;
+
+    private double  elbowPosition, gripPosition;
+    private double  elbowOpen, elbowClose;
+    private double  gripOpen, gripClose;
+    private boolean elbowCheck, gripCheck;
+
+    private double  MIN_POSITION = 0, MAX_POSITION = 1;
 
 
     @Override
@@ -36,7 +46,10 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         telemetry.update();
 
         powers = new double[4];
-
+        elbowOpen = 1;
+        elbowClose = 0;
+        gripOpen = 1;
+        gripClose = 0;
 
         /* ROBOT HARDWARE */
 
@@ -48,6 +61,9 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
         wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLiftMotor");
         intakeDriveMotor = hardwareMap.get(DcMotor.class, "intakeDriveMotor");
+
+        gripServo = hardwareMap.servo.get("gripServo");
+        elbowServo = hardwareMap.servo.get("elbowServo");
 
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -68,6 +84,12 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
         //wait for start
         waitForStart();
+
+        elbowPosition = 0.5; // whichever position is required to straighten out the elbow
+        elbowCheck = true;
+        gripPosition  = MIN_POSITION; // or wherever is closed
+        gripCheck = false;
+
         runtime.reset();
 
         while (opModeIsActive()) {
@@ -93,6 +115,10 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
             wobbleLiftMotor.setPower(gamepad2.left_stick_y);
             intakeDriveMotor.setPower(gamepad2.right_stick_y);
+
+            if (gamepad2.a) {
+                
+            }
 
             for (int i = 0; i < 4; i ++ ) {
                 telemetry.addData("Powers " + i + ":", powers[i]);
