@@ -23,15 +23,10 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     private DcMotor wobbleLiftMotor = null;
     private DcMotor intakeDriveMotor = null;
 
-    private double  G1LeftStickY;
-    private double  G1LeftStickX;
-    private double  G1RightStickX;
-    private double  G2LeftStickY;
-    private double  G2RightStickX;
-
     private double  angle;
-    private double  magnitude;
+    private double  robotAngle;
     private double  powers[];
+    private double  rightX;
 
 
     @Override
@@ -60,13 +55,13 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //set direction of motors
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        wobbleLiftMotor.setDirection(DcMotor.Direction.FORWARD);
-        intakeDriveMotor.setDirection(DcMotor.Direction.FORWARD);
+        wobbleLiftMotor.setDirection(DcMotor.Direction.REVERSE);
+        intakeDriveMotor.setDirection(DcMotor.Direction.REVERSE);
 
         /* END ROBOT HARDWARE */
 
@@ -77,32 +72,28 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            // setup the inputs
-            G1LeftStickY  = gamepad1.left_stick_y;
-            G1LeftStickX  = gamepad1.left_stick_x;
-            G1RightStickX = gamepad1.right_stick_x;
+            angle = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            rightX = gamepad1.right_stick_x;
+            powers[0] = angle * Math.cos(robotAngle) + rightX;
+            powers[1] = angle * Math.sin(robotAngle) - rightX;
+            powers[2] = angle * Math.sin(robotAngle) + rightX;
+            powers[3] = angle * Math.cos(robotAngle) - rightX;
 
-            G2LeftStickY  = gamepad2.left_stick_y;
-            G2RightStickX = gamepad2.left_stick_x;
+            double largest = 1.0;
+            largest = Math.max(largest, Math.abs(powers[0]));
+            largest = Math.max(largest, Math.abs(powers[1]));
+            largest = Math.max(largest, Math.abs(powers[2]));
+            largest = Math.max(largest, Math.abs(powers[3]));
 
-            angle = Math.atan2(G1LeftStickX, -G1LeftStickY);
-            magnitude = Math.sqrt(Math.pow(G1LeftStickY,2)+Math.pow(G1LeftStickX,2));
+            frontLeftDrive.setPower(powers[0]/largest);
+            frontRightDrive.setPower(powers[1]/largest);
+            backLeftDrive.setPower(powers[2]/largest);
+            backRightDrive.setPower(powers[3]/largest);
 
-            powers[0] = Math.cos(angle + (1) * Math.PI/4) * magnitude;
-            powers[1] = Math.cos(angle + (-1) * Math.PI/4) * magnitude;
-            powers[2] = Math.cos(angle + (1) * Math.PI/4) * magnitude;
-            powers[3] = Math.cos(angle + (-1) * Math.PI/4) * magnitude;
+            wobbleLiftMotor.setPower(gamepad2.left_stick_y);
+            intakeDriveMotor.setPower(gamepad2.right_stick_y);
 
-            frontLeftDrive.setPower(powers[0]);
-            frontRightDrive.setPower(powers[1]);
-            backLeftDrive.setPower(powers[2]);
-            backRightDrive.setPower(powers[3]);
-
-            wobbleLiftMotor.setPower(G2LeftStickY);
-            intakeDriveMotor.setPower(G2RightStickX);
-
-            telemetry.addData("Angle: ", angle);
-            telemetry.addData("Magnitude: ", magnitude);
             for (int i = 0; i < 4; i ++ ) {
                 telemetry.addData("Powers " + i + ":", powers[i]);
             }
