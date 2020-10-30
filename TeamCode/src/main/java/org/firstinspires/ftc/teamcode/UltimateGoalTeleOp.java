@@ -23,8 +23,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     private DcMotor wobbleLiftMotor;
     private DcMotor intakeDriveMotor;
 
-    private Servo   elbowServo;
-    private Servo   gripServo;
+//    private Servo   elbowServo;
+//    private Servo   gripServo;
 
     private double  angle;
     private double  robotAngle;
@@ -62,8 +62,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLiftMotor");
         intakeDriveMotor = hardwareMap.get(DcMotor.class, "intakeDriveMotor");
 
-        gripServo = hardwareMap.servo.get("gripServo");
-        elbowServo = hardwareMap.servo.get("elbowServo");
+//        gripServo = hardwareMap.servo.get("gripServo");
+//        elbowServo = hardwareMap.servo.get("elbowServo");
 
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -116,9 +116,9 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             wobbleLiftMotor.setPower(gamepad2.left_stick_y);
             intakeDriveMotor.setPower(gamepad2.right_stick_y);
 
-            if (gamepad2.a) {
-                
-            }
+//            if (gamepad2.a) {
+//
+//            }
 
             for (int i = 0; i < 4; i ++ ) {
                 telemetry.addData("Powers " + i + ":", powers[i]);
