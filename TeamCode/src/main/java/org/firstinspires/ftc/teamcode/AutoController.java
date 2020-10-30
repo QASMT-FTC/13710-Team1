@@ -10,8 +10,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 @Disabled
 public abstract class AutoController extends LinearOpMode {
@@ -19,6 +17,9 @@ public abstract class AutoController extends LinearOpMode {
     private static final String tflowModel = "UltimateGoal.tflite";
     private static final String labelFirst = "Quad";
     private static final String labelSecond = "Single";
+
+    int rings = 0;
+    boolean confident = false;
 
     private static final String vuforiaKey = "ASoWcFP/////AAABmcxv4D6UuE9nrun4533shIQSemlo5Sc0S1/AXz90Dom7PRfqkUqBvOyoaqKqaTWQHXDlhkOy3zcmgy/DnDaKJJU8z5MsbhUUSpJUWRV3knzpYD3KYvO8SySzXXgQits7LDJuGEmAmoqa/heAXwKyGlEKlAnCWr1icMXwrRjJPhP4xE74vXKcXmH7jgOtl0/dew8bo1bl2fZ0zxAPZ0QHNC3rQHoMASKwdwxnb/i7X3DQg544p12t7rpcZkv0HvHhM7CW0Aooal2lFDC/9PfRWknIOqPYYUGtJd7WJMf50UFJMfbMkcEPNxgLanI+ZtFfloMXzy1wx2okhsfN9AnFTwzkDd/L0cCvTwk/UUXoWVW8";
 
@@ -57,8 +58,15 @@ public abstract class AutoController extends LinearOpMode {
                     telemetry.addData(String.format(" left,top (%d) ", i), "%.03f , %.03f" , recognition.getLeft(), recognition.getTop());
                     telemetry.addData(String.format(" right,bottom (%d)", i), "%.03f , %.03f" , recognition.getRight(), recognition.getBottom());
 
+                    if (recognition.getLabel() == "Single") {
+                        rings = 1;
+                    } else if (recognition.getLabel() == "Quad") {
+                        rings = 4;
+                    }
+
                 }
 
+                telemetry.addData("Number of rings: ", rings);
                 telemetry.update();
 
             }

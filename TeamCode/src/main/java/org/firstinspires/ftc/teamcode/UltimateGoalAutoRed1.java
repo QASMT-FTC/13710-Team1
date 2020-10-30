@@ -26,10 +26,23 @@ public class UltimateGoalAutoRed1 extends AutoController {
         runtime.reset();
 
         //used for testing purposes currently
-        while (opModeIsActive()) {
+        while (opModeIsActive() && (runtime.seconds() < 3.0)) {
 
             openPipeline();
 
+        }
+
+        if (rings == 0) {
+            //target zone A
+            telemetry.addData("Zone: ", "A");
+        } else if (rings == 1) {
+            //target zone B
+            telemetry.addData("Zone: ", "B");
+        } else if (rings == 4) {
+            //target zone C
+            telemetry.addData("Zone: ", "C");
+        } else {
+            //error
         }
 
     }
