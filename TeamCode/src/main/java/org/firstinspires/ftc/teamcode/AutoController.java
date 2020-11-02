@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import android.graphics.Color;
 
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -13,6 +17,31 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 @Disabled
 public abstract class AutoController extends LinearOpMode {
+
+    DcMotor frontLeftDrive;
+    DcMotor frontRightDrive;
+    DcMotor backLeftDrive;
+    DcMotor backRightDrive;
+
+    DcMotor wobbleLiftMotor;
+    DcMotor intakeDriveMotor;
+    DcMotor beltDriveMotor;
+
+    DcMotor elbowDriveMotor;
+    Servo   gripServo;
+
+    DigitalChannel touch;
+
+    double  angle;
+    double  robotAngle;
+    double  powers[];
+    double  rightX;
+
+    private double  gripPosition;
+    private double  gripOpen, gripClose;
+    private boolean gripCheck;
+
+    private double  MIN_POSITION = 0, MAX_POSITION = 1;
 
     private static final String tflowModel = "UltimateGoal.tflite";
     private static final String labelFirst = "Quad";
@@ -38,6 +67,59 @@ public abstract class AutoController extends LinearOpMode {
 
         telemetry.addData("Pipeline: ", "The Tensor is ready to flow.");
         telemetry.update();
+
+    }
+
+    public void initHardware() {
+
+        powers = new double[4];
+        gripOpen = 1;
+        gripClose = 0;
+
+        /* ROBOT HARDWARE */
+
+        //second parameter is used in config
+        frontLeftDrive  = hardwareMap.get(DcMotor.class, "frontLeftDrive");
+        frontRightDrive = hardwareMap.get(DcMotor.class, "frontRightDrive");
+        backLeftDrive  = hardwareMap.get(DcMotor.class, "backLeftDrive");
+        backRightDrive = hardwareMap.get(DcMotor.class, "backRightDrive");
+
+        wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLiftMotor");
+        intakeDriveMotor = hardwareMap.get(DcMotor.class, "intakeDriveMotor");
+        beltDriveMotor = hardwareMap.get(DcMotor.class, "beltDriveMotor");
+
+        elbowDriveMotor = hardwareMap.get(DcMotor.class, "elbowDriveMotor");
+        gripServo = hardwareMap.servo.get("gripServo");
+
+        touch = hardwareMap.get(DigitalChannel.class, "touch");
+
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        wobbleLiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        beltDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elbowDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        touch.setMode(DigitalChannel.Mode.INPUT);
+
+        //set direction of motors
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        wobbleLiftMotor.setDirection(DcMotor.Direction.REVERSE);
+        intakeDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        beltDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        elbowDriveMotor.setDirection(DcMotor.Direction.FORWARD);
+
+
+
+        /* END ROBOT HARDWARE */
+
 
     }
 

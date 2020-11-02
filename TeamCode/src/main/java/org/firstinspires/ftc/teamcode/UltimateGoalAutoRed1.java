@@ -17,9 +17,7 @@ public class UltimateGoalAutoRed1 extends AutoController {
 
         initController();
 
-        /* ROBOT HARDWARE */
-
-        /* END ROBOT HARDWARE */
+        initHardware();
 
         //wait for start
         waitForStart();
@@ -44,6 +42,21 @@ public class UltimateGoalAutoRed1 extends AutoController {
         } else {
             //error
         }
+
+        while (opModeIsActive() && (runtime.seconds() < 100)) {
+
+            if (touch.getState() == true) {
+                telemetry.addData("Touch", "Is Not Pressed");
+            } else {
+                telemetry.addData("Touch", "Is Pressed");
+            }
+
+        }
+
+
+        telemetry.update();
+
+        sleep(30000);
 
     }
 
