@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -31,6 +32,7 @@ public abstract class AutoController extends LinearOpMode {
     Servo   gripServo;
 
     DigitalChannel touch;
+    ColorSensor color;
 
     double  angle;
     double  robotAngle;
@@ -54,6 +56,19 @@ public abstract class AutoController extends LinearOpMode {
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
+
+    public void runToGoal() {
+
+        while (touch.getState() == true) {
+            frontLeftDrive.setPower(0.3);
+            frontRightDrive.setPower(0.3);
+            backLeftDrive.setPower(0.3);
+            backRightDrive.setPower(0.3);
+        }
+
+    }
+
+
 
     public void initController() {
 
@@ -122,6 +137,81 @@ public abstract class AutoController extends LinearOpMode {
 
 
     }
+    //1440 ticks per revolution
+    //dist (mm) / 0.07055555535799998 = num pulses
+
+
+    public void encoderReset() {
+        frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+
+
+    public void setPowers(double power) {
+        frontLeftDrive.setPower(power);
+        frontRightDrive.setPower(power);
+        backLeftDrive.setPower(power);
+        backRightDrive.setPower(power);
+    }
+
+    public int pulses(int distMM) {
+        int pulses;
+        pulses = (int) (mmDist / 0.07055555535799998);
+        return pulses;
+    }
+
+    public void move(char axis, int dist) { //dist in mm
+
+        encoderReset();
+        if (axis == 'y') {
+            forward(pulses(dist));
+        } else if (axis == 'x') {
+            strafe(pulses(dist));
+        }
+
+        while (frontLeftDrive.isBusy() || backLeftDrive().isBusy() && opModeIsActive()) {
+            //wait until complete
+        }
+
+    }
+
+    public String returnColor(int sensitivity)
+    {
+        telemetry.addData("Red", color.red());
+        telemetry.addData("Green", color.green());
+        telemetry.addData("Blue", color.blue());
+        telemetry.update();
+
+        if(color.red() + color.green() + color.blue() > sensitivity*3)
+            return "white";
+
+        if (color.blue() > sensitivity)
+            return "blue";
+
+        if (color.red() > sensitivity)
+            return "red";
+
+        return "black";
+    }
+
+    public void forward(int dist) {
+        dist = (dist*52)/36;
+        frontLeftDrive.setTargetPosition(dist);
+        frontRightDrive.setTargetPosition(dist);
+        backLeftDrive.setTargetPosition(dist);
+        backRightDrive.setTargetPosition(dist);
+    }
+
+    public void strafe(int dist) {
+        dist = (dist*52)/36;
+        frontLeftDrive.setTargetPosition(dist);
+        frontRightDrive.setTargetPosition(-dist);
+        backLeftDrive.setTargetPosition(-dist);
+        backRightDrive.setTargetPosition(dist);
+    }
 
     public void openPipeline() {
 
@@ -152,13 +242,6 @@ public abstract class AutoController extends LinearOpMode {
                 telemetry.update();
 
             }
-
-//            int rings;
-//            if (updatedRecognitions == null) {
-//                rings = 0;
-//            } else {
-//                rings = updatedRecognitions.size();
-//            }
 
         }
 

@@ -69,8 +69,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        wobbleLiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elbowDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        wobbleLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elbowDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //set direction of motors
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -85,6 +85,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
         /* END ROBOT HARDWARE */
 
+        wobbleLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbowDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //wait for start
         waitForStart();
@@ -104,12 +106,12 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             powers[1] = angle * Math.sin(robotAngle) - rightX;
             powers[2] = angle * Math.sin(robotAngle) + rightX;
             powers[3] = angle * Math.cos(robotAngle) - rightX;
-
             double largest = 1.0;
             largest = Math.max(largest, Math.abs(powers[0]));
             largest = Math.max(largest, Math.abs(powers[1]));
             largest = Math.max(largest, Math.abs(powers[2]));
             largest = Math.max(largest, Math.abs(powers[3]));
+
 
             frontLeftDrive.setPower(powers[0]/largest);
             frontRightDrive.setPower(powers[1]/largest);
@@ -132,16 +134,19 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
             gripServo.setPosition(gamepad2.left_stick_x);
 
-            if (gamepad2.dpad_up) {
-                elbowDriveMotor.setPower(0.2);
-            } else if (gamepad2.dpad_down) {
-                elbowDriveMotor.setPower(-0.2);
-            }
+//            if (gamepad2.dpad_up) {
+//                elbowDriveMotor.setPower(0.2);
+//            } else if (gamepad2.dpad_down) {
+//                elbowDriveMotor.setPower(-0.2);
+//            }
 
             intakeDriveMotor.setPower(gamepad2.right_trigger);
             beltDriveMotor.setPower(gamepad2.left_trigger);
 
-            wobbleLiftMotor.setPower(gamepad2.right_stick_y);
+//            wobbleLiftMotor.setPower(gamepad2.right_stick_y);
+
+            telemetry.addData("Arm Pos: ", wobbleLiftMotor.getCurrentPosition());
+            telemetry.addData("Elbow Pos: ", elbowDriveMotor.getCurrentPosition());
 
             //telemetry
             for (int i = 0; i < 4; i ++ ) {
