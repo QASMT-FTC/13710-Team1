@@ -68,8 +68,6 @@ public abstract class AutoController extends LinearOpMode {
 
     }
 
-
-
     public void initController() {
 
         initVuforia();
@@ -159,7 +157,7 @@ public abstract class AutoController extends LinearOpMode {
 
     public int pulses(int distMM) {
         int pulses;
-        pulses = (int) (mmDist / 0.07055555535799998);
+        pulses = (int) (distMM / 0.07055555535799998);
         return pulses;
     }
 
@@ -172,14 +170,13 @@ public abstract class AutoController extends LinearOpMode {
             strafe(pulses(dist));
         }
 
-        while (frontLeftDrive.isBusy() || backLeftDrive().isBusy() && opModeIsActive()) {
+        while (frontLeftDrive.isBusy() || backLeftDrive.isBusy() && opModeIsActive()) {
             //wait until complete
         }
 
     }
 
-    public String returnColor(int sensitivity)
-    {
+    public String getColor(int sensitivity) {
         telemetry.addData("Red", color.red());
         telemetry.addData("Green", color.green());
         telemetry.addData("Blue", color.blue());

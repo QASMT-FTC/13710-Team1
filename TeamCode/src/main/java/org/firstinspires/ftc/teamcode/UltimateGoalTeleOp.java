@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
 import java.lang.Math.*;
 
 @TeleOp(name="UltimateGoalTeleOp", group="Linear Opmode")
@@ -134,16 +136,28 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
             gripServo.setPosition(gamepad2.left_stick_x);
 
-//            if (gamepad2.dpad_up) {
-//                elbowDriveMotor.setPower(0.2);
-//            } else if (gamepad2.dpad_down) {
-//                elbowDriveMotor.setPower(-0.2);
-//            }
+            if (gamepad2.dpad_up) {
+                elbowDriveMotor.setPower(0.05);
+            } else if (gamepad2.dpad_down) {
+                elbowDriveMotor.setPower(-0.05);
+            }
 
             intakeDriveMotor.setPower(gamepad2.right_trigger);
             beltDriveMotor.setPower(gamepad2.left_trigger);
 
-//            wobbleLiftMotor.setPower(gamepad2.right_stick_y);
+//            double liftPower;
+//            int sensitivity = 360; //360 will move from 0 to 90 degrees in joystick position 0 to 1.
+//
+//            // YOU MAY NEED TO CHANGE THE DIRECTION OF THIS STICK. RIGHT NOW IT IS NEGATIVE.
+//            double liftStick = -gamepad2.left_stick_y;
+//            liftPower    = Range.clip(liftStick, -1.0, 1.0) ;
+//
+//            liftPosition += (int)liftPower*sensitivity;
+//            liftPosition = Range.clip(liftPosition, 0, 360);
+//
+//            // MOVES UP FROM POSITION 0 TO 90 DEGREES UP.
+//            liftMotor.setTargetPosition(liftPosition);
+//            liftMotor.setPower(0.2);
 
             telemetry.addData("Arm Pos: ", wobbleLiftMotor.getCurrentPosition());
             telemetry.addData("Elbow Pos: ", elbowDriveMotor.getCurrentPosition());

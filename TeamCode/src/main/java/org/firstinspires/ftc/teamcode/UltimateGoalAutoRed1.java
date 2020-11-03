@@ -25,6 +25,7 @@ public class UltimateGoalAutoRed1 extends AutoController {
 
         //move forward a tiny bit
 
+
         while (opModeIsActive() && (runtime.seconds() < 5.0)) {
 
             openPipeline();
