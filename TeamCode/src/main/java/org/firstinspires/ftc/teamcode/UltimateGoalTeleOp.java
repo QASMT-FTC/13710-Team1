@@ -102,7 +102,9 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            //first gamepad
+            /*
+            first gamepad
+            */
             angle = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             rightX = gamepad1.right_stick_x;
@@ -122,26 +124,17 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             backLeftDrive.setPower(powers[2]/largest);
             backRightDrive.setPower(powers[3]/largest);
 
-            //second gamepad
+            /*
+            second gamepad
+            */
+
             wobbleLiftMotor.setPower(gamepad2.left_stick_y);
             intakeDriveMotor.setPower(gamepad2.right_stick_y);
 
-//            if (gamepad2.a) {
-//                if (gripCheck = false) {
-//                    gripServo.setPosition(gripClose);
-//                    gripCheck = true;
-//                } else {
-//                    gripServo.setPosition(gripOpen);
-//                    gripCheck = false;
-//                }
-//            }
-
-            gripServo.setPosition(gamepad2.left_stick_x);
-
-            if (gamepad2.dpad_up) {
-                elbowDriveMotor.setPower(0.05);
-            } else if (gamepad2.dpad_down) {
-                elbowDriveMotor.setPower(-0.05);
+            if (gamepad2.a) { //open
+                gripServo.setPosition(MAX_POSITION);
+            } else if (gamepad2.b) { //min
+                gripServo.setPosition(MIN_POSITION);
             }
 
             intakeDriveMotor.setPower(gamepad2.right_trigger);
@@ -152,21 +145,25 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
             // YOU MAY NEED TO CHANGE THE DIRECTION OF THIS STICK. RIGHT NOW IT IS NEGATIVE.
             armPower = Range.clip(gamepad2.right_stick_y, -1.0, 1.0);
-            elbowPower = Range.clip(gamepad2.left_stick_y, -1.0, 1.0);
+            elbowPower = Range.clip(gamepad2.left_stick_y, 1.0, 1.0);
 
-            armPosition += (int)armPower*sensitivity;
+            armPosition += (int) armPower*sensitivity;
             armPosition = Range.clip(armPosition, 0, 360);
+            elbowPosition += (int) elbowPower*sensitivity;
             elbowPosition = Range.clip(elbowPosition, 0, 360);
-            elbowPosition   
 
             // MOVES UP FROM POSITION 0 TO 90 DEGREES UP.
             wobbleLiftMotor.setTargetPosition(armPosition);
             wobbleLiftMotor.setPower(0.1);
+            elbowDriveMotor.setTargetPosition(elbowPosition);
+            elbowDriveMotor.setPower(0.1);
 
             telemetry.addData("Arm Pos: ", wobbleLiftMotor.getCurrentPosition());
             telemetry.addData("Elbow Pos: ", elbowDriveMotor.getCurrentPosition());
 
-            //telemetry
+            /*
+            telemetry
+             */
             for (int i = 0; i < 4; i ++ ) {
                 telemetry.addData("Powers " + i + ":", powers[i]);
             }
