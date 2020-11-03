@@ -34,10 +34,6 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     private double  powers[];
     private double  rightX;
 
-    private double  gripPosition;
-    private double  gripOpen, gripClose;
-    private boolean gripCheck;
-
     private double  MIN_POSITION = 0, MAX_POSITION = 1;
 
     int armPosition = 0;
@@ -50,8 +46,6 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         telemetry.update();
 
         powers = new double[4];
-        gripOpen = 1;
-        gripClose = 0;
 
         /* ROBOT HARDWARE */
 
@@ -95,9 +89,6 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         //wait for start
         waitForStart();
 
-        gripPosition  = MIN_POSITION; // or wherever is closed
-        gripCheck = false;
-
         runtime.reset();
 
         while (opModeIsActive()) {
@@ -105,6 +96,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             /*
             first gamepad
             */
+
             angle = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             rightX = gamepad1.right_stick_x;
@@ -118,11 +110,18 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             largest = Math.max(largest, Math.abs(powers[2]));
             largest = Math.max(largest, Math.abs(powers[3]));
 
+            if (gamepad1.a) { //slow mode
+                frontLeftDrive.setPower((powers[0]/largest)/2);
+                frontRightDrive.setPower((powers[1]/largest)/2);
+                backLeftDrive.setPower((powers[2]/largest)/2);
+                backRightDrive.setPower((powers[3]/largest)/2);
+            } else {
+                frontLeftDrive.setPower(powers[0]/largest);
+                frontRightDrive.setPower(powers[1]/largest);
+                backLeftDrive.setPower(powers[2]/largest);
+                backRightDrive.setPower(powers[3]/largest);
+            }
 
-            frontLeftDrive.setPower(powers[0]/largest);
-            frontRightDrive.setPower(powers[1]/largest);
-            backLeftDrive.setPower(powers[2]/largest);
-            backRightDrive.setPower(powers[3]/largest);
 
             /*
             second gamepad
@@ -133,7 +132,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
             if (gamepad2.a) { //open
                 gripServo.setPosition(MAX_POSITION);
-            } else if (gamepad2.b) { //min
+            } else if (gamepad2.b) { //close
                 gripServo.setPosition(MIN_POSITION);
             }
 
@@ -158,12 +157,14 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             elbowDriveMotor.setTargetPosition(elbowPosition);
             elbowDriveMotor.setPower(0.1);
 
-            telemetry.addData("Arm Pos: ", wobbleLiftMotor.getCurrentPosition());
-            telemetry.addData("Elbow Pos: ", elbowDriveMotor.getCurrentPosition());
 
             /*
             telemetry
              */
+
+            telemetry.addData("Arm Pos: ", wobbleLiftMotor.getCurrentPosition());
+            telemetry.addData("Elbow Pos: ", elbowDriveMotor.getCurrentPosition());
+
             for (int i = 0; i < 4; i ++ ) {
                 telemetry.addData("Powers " + i + ":", powers[i]);
             }

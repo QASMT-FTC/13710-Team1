@@ -157,7 +157,7 @@ public abstract class AutoController extends LinearOpMode {
 
     public int pulses(int distMM) {
         int pulses;
-        pulses = (int) (distMM / 0.07055555535799998);
+        pulses = (int) (distMM / 0.07055555535799998); //coefficent of diameter
         return pulses;
     }
 
