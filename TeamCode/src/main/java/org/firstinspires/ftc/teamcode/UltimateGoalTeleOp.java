@@ -40,6 +40,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
     private double  MIN_POSITION = 0, MAX_POSITION = 1;
 
+    int armPosition = 0;
 
     @Override
     public void runOpMode() {
@@ -145,19 +146,18 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             intakeDriveMotor.setPower(gamepad2.right_trigger);
             beltDriveMotor.setPower(gamepad2.left_trigger);
 
-//            double liftPower;
+//            double armPower;
 //            int sensitivity = 360; //360 will move from 0 to 90 degrees in joystick position 0 to 1.
 //
 //            // YOU MAY NEED TO CHANGE THE DIRECTION OF THIS STICK. RIGHT NOW IT IS NEGATIVE.
-//            double liftStick = -gamepad2.left_stick_y;
-//            liftPower    = Range.clip(liftStick, -1.0, 1.0) ;
+//            armPower = Range.clip(gamepad2.right_stick_y, -1.0, 1.0) ;
 //
-//            liftPosition += (int)liftPower*sensitivity;
-//            liftPosition = Range.clip(liftPosition, 0, 360);
+//            armPosition += (int)armPower*sensitivity;
+//            armPosition = Range.clip(armPosition, 0, 360);
 //
 //            // MOVES UP FROM POSITION 0 TO 90 DEGREES UP.
-//            liftMotor.setTargetPosition(liftPosition);
-//            liftMotor.setPower(0.2);
+//            wobbleLiftMotor.setTargetPosition(armPosition);
+//            wobbleLiftMotor.setPower(0.1);
 
             telemetry.addData("Arm Pos: ", wobbleLiftMotor.getCurrentPosition());
             telemetry.addData("Elbow Pos: ", elbowDriveMotor.getCurrentPosition());
