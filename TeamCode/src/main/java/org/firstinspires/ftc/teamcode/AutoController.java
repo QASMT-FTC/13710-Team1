@@ -146,14 +146,20 @@ public abstract class AutoController extends LinearOpMode {
         backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
+    public void dropGoal() {
+        //todo
+    }
 
+    public void pickGoal() {
+        //todo
+    }
 
     public void setPowers(double power) {
         frontLeftDrive.setPower(power);
         frontRightDrive.setPower(power);
         backLeftDrive.setPower(power);
         backRightDrive.setPower(power);
-    }
+}
 
     public int pulses(int distMM) {
         int pulses;
@@ -192,6 +198,14 @@ public abstract class AutoController extends LinearOpMode {
             return "red";
 
         return "black";
+    }
+
+    public void moveToLine() {
+
+        while (getColor(100) != "white") {
+            setPowers(-0.5);
+        }
+
     }
 
     public void forward(int dist) {

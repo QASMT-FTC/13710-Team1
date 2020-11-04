@@ -8,7 +8,6 @@ public class UltimateGoalAutoRed1 extends AutoController {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-
     @Override
     public void runOpMode() {
 
@@ -23,8 +22,10 @@ public class UltimateGoalAutoRed1 extends AutoController {
         waitForStart();
         runtime.reset();
 
-        //move forward a tiny bit
+        pickGoal();
 
+        move('x', -200); //strafe slightly to get closer
+        move('y', 1100); //move forward to scan rings
 
         while (opModeIsActive() && (runtime.seconds() < 5.0)) {
 
@@ -36,17 +37,32 @@ public class UltimateGoalAutoRed1 extends AutoController {
             //target zone A
             telemetry.addData("Zone: ", "A");
 
+            move('y', 730); //move alongside goal
+            move('x', -100); //move out of goal slightly
 
+            dropGoal();
+
+            move('x', 500);
 
         } else if (rings == 1) {
             //target zone B
             telemetry.addData("Zone: ", "B");
 
+            move('y', 1300); //move alongside goal
+            move('x', 300); //move into goal slightly
+
+            dropGoal();
 
         } else if (rings == 4) {
             //target zone C
             telemetry.addData("Zone: ", "C");
 
+            move('y', 1900); //move alongside goal
+            move('x', -100); //move out of goal slightly
+
+            dropGoal();
+
+            move('x', 500);
 
         } else {
             //error
@@ -55,6 +71,7 @@ public class UltimateGoalAutoRed1 extends AutoController {
 
         runToGoal();
 
+        moveToLine();
 
         telemetry.update();
 
