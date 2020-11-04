@@ -200,10 +200,10 @@ public abstract class AutoController extends LinearOpMode {
         return "black";
     }
 
-    public void moveToLine(int direction) { //direction is -, move back
+    public void moveToLine(int directionModifier) { //direction is -, move back
 
         while (getColor(150) != "white") {
-            setPowers(0.5*direction);
+            setPowers(0.5*directionModifier);
         }
 
     }
@@ -217,7 +217,7 @@ public abstract class AutoController extends LinearOpMode {
     }
 
     public void strafe(int dist) {
-        dist = (dist*52)/36;
+        dist = (dist*52)/36; //sprokets are 52 tooth to 36 tooth
         frontLeftDrive.setTargetPosition(dist);
         frontRightDrive.setTargetPosition(-dist);
         backLeftDrive.setTargetPosition(-dist);
@@ -273,7 +273,7 @@ public abstract class AutoController extends LinearOpMode {
 
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minResultConfidence = 0.8f; //increase if getting false positives, decrease if not detecting
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(tflowModel, labelFirst, labelSecond);
 

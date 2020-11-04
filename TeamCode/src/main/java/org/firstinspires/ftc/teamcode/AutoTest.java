@@ -34,7 +34,7 @@ public class AutoTest extends AutoController {
 
         runToGoal(); //move the robot until reaching the far barrier
 
-        moveToLine(); //move the robot until reaching the white line
+        moveToLine(1); //move the robot until reaching the white line
 
     }
 
