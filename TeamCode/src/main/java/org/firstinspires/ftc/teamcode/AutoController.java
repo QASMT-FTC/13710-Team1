@@ -91,7 +91,6 @@ public abstract class AutoController extends LinearOpMode {
 
         /* ROBOT HARDWARE */
 
-        //second parameter is used in config
         frontLeftDrive  = hardwareMap.get(DcMotor.class, "frontLeftDrive");
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRightDrive");
         backLeftDrive  = hardwareMap.get(DcMotor.class, "backLeftDrive");
@@ -104,19 +103,13 @@ public abstract class AutoController extends LinearOpMode {
         elbowDriveMotor = hardwareMap.get(DcMotor.class, "elbowDriveMotor");
         gripServo = hardwareMap.servo.get("gripServo");
 
-        touch = hardwareMap.get(DigitalChannel.class, "touch");
-
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        wobbleLiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intakeDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        beltDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elbowDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        touch.setMode(DigitalChannel.Mode.INPUT);
+//        wobbleLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        elbowDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //set direction of motors
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -128,8 +121,6 @@ public abstract class AutoController extends LinearOpMode {
         intakeDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         beltDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         elbowDriveMotor.setDirection(DcMotor.Direction.FORWARD);
-
-
 
         /* END ROBOT HARDWARE */
 
