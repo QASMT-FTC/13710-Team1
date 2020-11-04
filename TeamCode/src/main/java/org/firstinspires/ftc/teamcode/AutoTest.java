@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="UltimateGoalAutoRed1", group="Linear OpMode")
+@Autonomous(name="Autonomous Testing", group="Linear OpMode")
 public class AutoTest extends AutoController {
 
     private ElapsedTime runtime = new ElapsedTime();
