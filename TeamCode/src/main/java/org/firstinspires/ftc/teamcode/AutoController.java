@@ -200,10 +200,10 @@ public abstract class AutoController extends LinearOpMode {
         return "black";
     }
 
-    public void moveToLine() {
+    public void moveToLine(int direction) { //direction is -, move back
 
-        while (getColor(100) != "white") {
-            setPowers(-0.5);
+        while (getColor(150) != "white") {
+            setPowers(0.5*direction);
         }
 
     }

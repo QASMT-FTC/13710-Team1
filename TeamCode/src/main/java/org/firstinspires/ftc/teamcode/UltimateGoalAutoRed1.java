@@ -71,7 +71,7 @@ public class UltimateGoalAutoRed1 extends AutoController {
 
         runToGoal();
 
-        moveToLine();
+        moveToLine(-1);
 
         telemetry.update();
 
