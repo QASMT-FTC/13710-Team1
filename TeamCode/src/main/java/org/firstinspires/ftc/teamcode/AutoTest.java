@@ -24,17 +24,23 @@ public class AutoTest extends AutoController {
 
         //methods to choose from:
 
-        pickGoal(); //grip the wobble goal
+//        pickGoal(); //grip the wobble goal
+//
+//        dropGoal(); //drop the wobble goal
+//
+//        while (opModeIsActive() && (runtime.seconds() < 5.0)) { openPipeline(); } //scan environment for a certain time
 
-        dropGoal(); //drop the wobble goal
+        move('x', 5000, 0.5); //move on an axis for a certain distance mm
+//
+//        runToGoal(); //move the robot until reaching the far barrier
+//
+//        moveToLine(1); //move the robot until reaching the white line
 
-        while (opModeIsActive() && (runtime.seconds() < 5.0)) { openPipeline(); } //scan environment for a certain time
+        while (opModeIsActive() && (runtime.seconds() < 5.0)) {
 
-        move('x', 500); //move on an axis for a certain distance mm
+            telemetry.addData("Colour: ", getColor(150));
 
-        runToGoal(); //move the robot until reaching the far barrier
-
-        moveToLine(1); //move the robot until reaching the white line
+        }
 
     }
 

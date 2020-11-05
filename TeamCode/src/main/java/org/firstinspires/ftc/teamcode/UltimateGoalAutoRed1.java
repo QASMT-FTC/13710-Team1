@@ -24,8 +24,8 @@ public class UltimateGoalAutoRed1 extends AutoController {
 
         pickGoal();
 
-        move('x', -200); //strafe slightly to get closer
-        move('y', 1100); //move forward to scan rings
+        move('x', -200, 0.2); //strafe slightly to get closer
+        move('y', 1100, 0.4); //move forward to scan rings
 
         while (opModeIsActive() && (runtime.seconds() < 5.0)) {
 
@@ -37,19 +37,19 @@ public class UltimateGoalAutoRed1 extends AutoController {
             //target zone A
             telemetry.addData("Zone: ", "A");
 
-            move('y', 730); //move alongside goal
-            move('x', -100); //move out of goal slightly
+            move('y', 730, 0.4); //move alongside goal
+            move('x', -100, 0.4); //move out of goal slightly
 
             dropGoal();
 
-            move('x', 500);
+            move('x', 500, 0.4);
 
         } else if (rings == 1) {
             //target zone B
             telemetry.addData("Zone: ", "B");
 
-            move('y', 1300); //move alongside goal
-            move('x', 300); //move into goal slightly
+            move('y', 1300, 0.4); //move alongside goal
+            move('x', 300, 0.4); //move into goal slightly
 
             dropGoal();
 
@@ -57,12 +57,12 @@ public class UltimateGoalAutoRed1 extends AutoController {
             //target zone C
             telemetry.addData("Zone: ", "C");
 
-            move('y', 1900); //move alongside goal
-            move('x', -100); //move out of goal slightly
+            move('y', 1900, 0.4); //move alongside goal
+            move('x', -100, 0.4); //move out of goal slightly
 
             dropGoal();
 
-            move('x', 500);
+            move('x', 500, 0.4);
 
         } else {
             //error

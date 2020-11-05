@@ -96,20 +96,11 @@ public abstract class AutoController extends LinearOpMode {
         backLeftDrive  = hardwareMap.get(DcMotor.class, "backLeftDrive");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRightDrive");
 
-        wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLiftMotor");
         intakeDriveMotor = hardwareMap.get(DcMotor.class, "intakeDriveMotor");
         beltDriveMotor = hardwareMap.get(DcMotor.class, "beltDriveMotor");
-
+        wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLiftMotor");
         elbowDriveMotor = hardwareMap.get(DcMotor.class, "elbowDriveMotor");
         gripServo = hardwareMap.servo.get("gripServo");
-
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-//        wobbleLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        elbowDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //set direction of motors
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -117,18 +108,27 @@ public abstract class AutoController extends LinearOpMode {
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        wobbleLiftMotor.setDirection(DcMotor.Direction.REVERSE);
-        intakeDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        beltDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        elbowDriveMotor.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        intakeDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        beltDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        wobbleLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbowDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wobbleLiftMotor.setTargetPosition(0);
+        elbowDriveMotor.setTargetPosition(0);
+        wobbleLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elbowDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         /* END ROBOT HARDWARE */
 
 
     }
-    //1440 ticks per revolution
-    //dist (mm) / 0.07055555535799998 = num pulses
 
+    //1440 ticks per 2 revolutions of wheel
 
     public void encoderReset() {
         frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -136,6 +136,13 @@ public abstract class AutoController extends LinearOpMode {
         backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+
+    public void encodersOn() {
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+}
 
     public void dropGoal() {
         //todo
@@ -153,18 +160,17 @@ public abstract class AutoController extends LinearOpMode {
 }
 
     public int pulses(int distMM) {
-        int pulses;
-        pulses = (int) (distMM / 0.07055555535799998); //coefficent of diameter
-        return pulses;
+        return (int) (distMM * 11.4591559026); //turns distance into encoder counts using diameter
     }
 
-    public void move(char axis, int dist) { //dist in mm
+    public void move(char axis, int dist, double power) { //dist in mm
 
         encoderReset();
+        encodersOn();
         if (axis == 'y') {
-            forward(pulses(dist));
+            forward(pulses(dist), power);
         } else if (axis == 'x') {
-            strafe(pulses(dist));
+            strafe(pulses(dist), power);
         }
 
         while (frontLeftDrive.isBusy() || backLeftDrive.isBusy() && opModeIsActive()) {
@@ -174,10 +180,6 @@ public abstract class AutoController extends LinearOpMode {
     }
 
     public String getColor(int sensitivity) {
-        telemetry.addData("Red", color.red());
-        telemetry.addData("Green", color.green());
-        telemetry.addData("Blue", color.blue());
-        telemetry.update();
 
         if(color.red() + color.green() + color.blue() > sensitivity*3)
             return "white";
@@ -194,25 +196,31 @@ public abstract class AutoController extends LinearOpMode {
     public void moveToLine(int directionModifier) { //direction is -, move back
 
         while (getColor(150) != "white") {
+            frontLeftDrive.setTargetPosition(5);
+            frontRightDrive.setTargetPosition(5);
+            backLeftDrive.setTargetPosition(5);
+            backRightDrive.setTargetPosition(5);
             setPowers(0.5*directionModifier);
         }
 
     }
 
-    public void forward(int dist) {
+    public void forward(int dist, double power) {
         dist = (dist*52)/36;
         frontLeftDrive.setTargetPosition(dist);
         frontRightDrive.setTargetPosition(dist);
         backLeftDrive.setTargetPosition(dist);
         backRightDrive.setTargetPosition(dist);
-    }
+        setPowers(power);
+}
 
-    public void strafe(int dist) {
+    public void strafe(int dist, double power) {
         dist = (dist*52)/36; //sprokets are 52 tooth to 36 tooth
         frontLeftDrive.setTargetPosition(dist);
         frontRightDrive.setTargetPosition(-dist);
         backLeftDrive.setTargetPosition(-dist);
         backRightDrive.setTargetPosition(dist);
+        setPowers(power);
     }
 
     public void openPipeline() {

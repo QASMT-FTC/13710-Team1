@@ -37,7 +37,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     int liftPosition = 0;
     int elbowPosition = 0;
 
-    int sensitivity = 0;
+    int sensitivity = 1;
 
     @Override
     public void runOpMode() {
@@ -55,10 +55,9 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         backLeftDrive  = hardwareMap.get(DcMotor.class, "backLeftDrive");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRightDrive");
 
-        wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLiftMotor");
         intakeDriveMotor = hardwareMap.get(DcMotor.class, "intakeDriveMotor");
         beltDriveMotor = hardwareMap.get(DcMotor.class, "beltDriveMotor");
-
+        wobbleLiftMotor = hardwareMap.get(DcMotor.class, "wobbleLiftMotor");
         elbowDriveMotor = hardwareMap.get(DcMotor.class, "elbowDriveMotor");
         gripServo = hardwareMap.servo.get("gripServo");
 
@@ -72,6 +71,9 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        intakeDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        beltDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         wobbleLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elbowDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -127,35 +129,35 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             second gamepad
             */
 
-            if (gamepad2.a) { //open
-                gripServo.setPosition(1);
-            } else if (gamepad2.b) { //close
-                gripServo.setPosition(0.2);
+            if (gamepad2.x) { //open
+                gripServo.setPosition(0.7);
+            } else if (gamepad2.y) { //close
+                gripServo.setPosition(0);
             }
 
-            intakeDriveMotor.setPower(gamepad2.right_trigger);
-            beltDriveMotor.setPower(gamepad2.left_trigger);
+            intakeDriveMotor.setPower(-gamepad2.right_trigger);
+            beltDriveMotor.setPower(-gamepad2.left_trigger);
 
             //wobble arm
             liftPosition += (int) gamepad2.left_stick_y*sensitivity;
             liftPosition = Range.clip(liftPosition, 0, 700);
             wobbleLiftMotor.setTargetPosition(liftPosition);
-            wobbleLiftMotor.setPower(0.2);
+            wobbleLiftMotor.setPower(0.5);
             wobbleLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             //wobble elbow
             elbowPosition += (int) gamepad2.right_stick_y*sensitivity;
-            elbowPosition = Range.clip(elbowPosition, 0, 700);
+            elbowPosition = Range.clip(elbowPosition, 0, 700); //change depending on the max/min position where 0 is start position (where encoders are reset)
             elbowDriveMotor.setTargetPosition(-elbowPosition);
-            elbowDriveMotor.setPower(0.1);
+            elbowDriveMotor.setPower(0.5);
             elbowDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             /*
             telemetry
              */
 
-//            telemetry.addData("Arm Pos: ", wobbleLiftMotor.getCurrentPosition());
-//            telemetry.addData("Elbow Pos: ", elbowDriveMotor.getCurrentPosition());
+            telemetry.addData("Arm Pos: ", wobbleLiftMotor.getCurrentPosition());
+            telemetry.addData("Elbow Pos: ", elbowDriveMotor.getCurrentPosition());
 
             for (int i = 0; i < 4; i ++ ) {
                 telemetry.addData("Powers " + i + ":", powers[i]);
@@ -166,6 +168,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
         }
     }
+
 
 }
 
