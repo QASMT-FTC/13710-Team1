@@ -34,10 +34,10 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     private double  powers[];
     private double  rightX;
 
-    private double  MIN_POSITION = 0, MAX_POSITION = 1;
-
-    int armPosition = 0;
+    int liftPosition = 0;
     int elbowPosition = 0;
+
+    int sensitivity = 0;
 
     @Override
     public void runOpMode() {
@@ -62,6 +62,12 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         elbowDriveMotor = hardwareMap.get(DcMotor.class, "elbowDriveMotor");
         gripServo = hardwareMap.servo.get("gripServo");
 
+        //set direction of motors
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -69,22 +75,13 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
         wobbleLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elbowDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        wobbleLiftMotor.setTargetPosition(1);
-        elbowDriveMotor.setTargetPosition(1);
+        wobbleLiftMotor.setTargetPosition(0);
+        elbowDriveMotor.setTargetPosition(0);
         wobbleLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elbowDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        //set direction of motors
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        wobbleLiftMotor.setDirection(DcMotor.Direction.REVERSE);
-        intakeDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        beltDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        elbowDriveMotor.setDirection(DcMotor.Direction.FORWARD);
 
         /* END ROBOT HARDWARE */
 
@@ -131,13 +128,27 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             */
 
             if (gamepad2.a) { //open
-                gripServo.setPosition(MAX_POSITION);
+                gripServo.setPosition(1);
             } else if (gamepad2.b) { //close
-                gripServo.setPosition(MIN_POSITION);
+                gripServo.setPosition(0.2);
             }
 
             intakeDriveMotor.setPower(gamepad2.right_trigger);
             beltDriveMotor.setPower(gamepad2.left_trigger);
+
+            //wobble arm
+            liftPosition += (int) gamepad2.left_stick_y*sensitivity;
+            liftPosition = Range.clip(liftPosition, 0, 700);
+            wobbleLiftMotor.setTargetPosition(liftPosition);
+            wobbleLiftMotor.setPower(0.2);
+            wobbleLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            //wobble elbow
+            elbowPosition += (int) gamepad2.right_stick_y*sensitivity;
+            elbowPosition = Range.clip(elbowPosition, 0, 700);
+            elbowDriveMotor.setTargetPosition(-elbowPosition);
+            elbowDriveMotor.setPower(0.1);
+            elbowDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             /*
             telemetry
@@ -149,6 +160,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             for (int i = 0; i < 4; i ++ ) {
                 telemetry.addData("Powers " + i + ":", powers[i]);
             }
+
+            telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
 
         }
