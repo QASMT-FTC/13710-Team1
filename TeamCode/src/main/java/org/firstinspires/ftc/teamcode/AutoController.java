@@ -145,7 +145,14 @@ public abstract class AutoController extends LinearOpMode {
         frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-}
+    }
+
+    public void encodersWorking() {
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 
     public void dropGoal() {
         //todo
@@ -201,10 +208,6 @@ public abstract class AutoController extends LinearOpMode {
     public void moveToLine(int directionModifier) { //direction is -, move back
 
         while (getColour(150) != "white" && opModeIsActive()) {
-            frontLeftDrive.setTargetPosition(frontLeftDrive.getCurrentPosition() + 5);
-            frontRightDrive.setTargetPosition(frontRightDrive.getCurrentPosition() + 5);
-            backLeftDrive.setTargetPosition(backLeftDrive.getCurrentPosition() + 5);
-            backRightDrive.setTargetPosition(backRightDrive.getCurrentPosition() + 5);
             setPowers(0.4*directionModifier);
         }
 
