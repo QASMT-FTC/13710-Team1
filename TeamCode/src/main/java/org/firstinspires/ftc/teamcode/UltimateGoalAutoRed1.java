@@ -37,12 +37,12 @@ public class UltimateGoalAutoRed1 extends AutoController {
             //target zone A
             telemetry.addData("Zone: ", "A");
 
-            move('y', 730, 0.4); //move alongside goal
-            move('x', -100, 0.4); //move out of goal slightly
+            move('y', -730, 0.4); //move alongside goal
+            move('x', 100, 0.4); //move out of goal slightly
 
             dropGoal();
 
-            move('x', 500, 0.4);
+            move('x', -500, 0.4);
 
         } else if (rings == 1) {
             //target zone B

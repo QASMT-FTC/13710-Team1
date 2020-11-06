@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import android.graphics.Color;
@@ -32,7 +33,7 @@ public abstract class AutoController extends LinearOpMode {
     Servo   gripServo;
 
     DigitalChannel touch;
-    ColorSensor color;
+    ColorSensor colour;
 
     double  angle;
     double  robotAngle;
@@ -90,6 +91,8 @@ public abstract class AutoController extends LinearOpMode {
         gripClose = 0;
 
         /* ROBOT HARDWARE */
+
+        colour = hardwareMap.get(ColorSensor.class, "colour");
 
         frontLeftDrive  = hardwareMap.get(DcMotor.class, "frontLeftDrive");
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRightDrive");
@@ -179,15 +182,17 @@ public abstract class AutoController extends LinearOpMode {
 
     }
 
-    public String getColor(int sensitivity) {
+    public String getColour(int sensitivity) {
 
-        if(color.red() + color.green() + color.blue() > sensitivity*3)
+        telemetry.addData("Colour values: ", colour.argb());
+
+        if((colour.red() + colour.green() + colour.blue()) > sensitivity*3)
             return "white";
 
-        if (color.blue() > sensitivity)
+        if (colour.blue() > sensitivity)
             return "blue";
 
-        if (color.red() > sensitivity)
+        if (colour.red() > sensitivity)
             return "red";
 
         return "black";
@@ -195,18 +200,18 @@ public abstract class AutoController extends LinearOpMode {
 
     public void moveToLine(int directionModifier) { //direction is -, move back
 
-        while (getColor(150) != "white") {
-            frontLeftDrive.setTargetPosition(5);
-            frontRightDrive.setTargetPosition(5);
-            backLeftDrive.setTargetPosition(5);
-            backRightDrive.setTargetPosition(5);
-            setPowers(0.5*directionModifier);
+        while (getColour(150) != "white" && opModeIsActive()) {
+            frontLeftDrive.setTargetPosition(frontLeftDrive.getCurrentPosition() + 1);
+            frontRightDrive.setTargetPosition(frontRightDrive.getCurrentPosition() + 1);
+            backLeftDrive.setTargetPosition(backLeftDrive.getCurrentPosition() + 1);
+            backRightDrive.setTargetPosition(backRightDrive.getCurrentPosition() + 1);
+            setPowers(0.4*directionModifier);
         }
 
     }
 
     public void forward(int dist, double power) {
-        dist = (dist*52)/36;
+        dist = (dist*32)/16;
         frontLeftDrive.setTargetPosition(dist);
         frontRightDrive.setTargetPosition(dist);
         backLeftDrive.setTargetPosition(dist);
@@ -215,7 +220,7 @@ public abstract class AutoController extends LinearOpMode {
 }
 
     public void strafe(int dist, double power) {
-        dist = (dist*52)/36; //sprokets are 52 tooth to 36 tooth
+        dist = (dist*32)/16; //sprokets are 52 tooth to 36 tooth
         frontLeftDrive.setTargetPosition(dist);
         frontRightDrive.setTargetPosition(-dist);
         backLeftDrive.setTargetPosition(-dist);

@@ -34,10 +34,10 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     private double  powers[];
     private double  rightX;
 
-    int liftPosition = 0;
-    int elbowPosition = 0;
+    double liftPosition = 0;
+    double elbowPosition = 0;
 
-    int sensitivity = 1;
+    int sensitivity = 3;
 
     @Override
     public void runOpMode() {
@@ -79,11 +79,10 @@ public class UltimateGoalTeleOp extends LinearOpMode {
         elbowDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         wobbleLiftMotor.setTargetPosition(0);
         elbowDriveMotor.setTargetPosition(0);
+        elbowDriveMotor.setPower(1);
+        wobbleLiftMotor.setPower(1);
         wobbleLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elbowDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-
 
         /* END ROBOT HARDWARE */
 
@@ -100,8 +99,8 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             first gamepad
             */
 
-            angle = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            angle = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+            robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
             rightX = gamepad1.right_stick_x;
             powers[0] = angle * Math.cos(robotAngle) + rightX;
             powers[1] = angle * Math.sin(robotAngle) - rightX;
@@ -139,18 +138,15 @@ public class UltimateGoalTeleOp extends LinearOpMode {
             beltDriveMotor.setPower(-gamepad2.left_trigger);
 
             //wobble arm
-            liftPosition += (int) gamepad2.left_stick_y*sensitivity;
-            liftPosition = Range.clip(liftPosition, 0, 700);
-            wobbleLiftMotor.setTargetPosition(liftPosition);
-            wobbleLiftMotor.setPower(0.5);
-            wobbleLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            liftPosition += gamepad2.left_stick_y*sensitivity;
+            //liftPosition = Range.clip(liftPosition, -5000, 5000);
+            wobbleLiftMotor.setTargetPosition((int) liftPosition);
 
             //wobble elbow
-            elbowPosition += (int) gamepad2.right_stick_y*sensitivity;
-            elbowPosition = Range.clip(elbowPosition, 0, 700); //change depending on the max/min position where 0 is start position (where encoders are reset)
-            elbowDriveMotor.setTargetPosition(-elbowPosition);
-            elbowDriveMotor.setPower(0.5);
-            elbowDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            elbowPosition += gamepad2.right_stick_y*sensitivity;
+            //elbowPosition = Range.clip(elbowPosition, -5000, 5000); //change depending on the max/min position where 0 is start position (where encoders are reset)
+            elbowDriveMotor.setTargetPosition((int) -elbowPosition);
+
 
             /*
             telemetry
