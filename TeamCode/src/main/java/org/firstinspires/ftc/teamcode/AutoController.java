@@ -201,10 +201,10 @@ public abstract class AutoController extends LinearOpMode {
     public void moveToLine(int directionModifier) { //direction is -, move back
 
         while (getColour(150) != "white" && opModeIsActive()) {
-            frontLeftDrive.setTargetPosition(frontLeftDrive.getCurrentPosition() + 1);
-            frontRightDrive.setTargetPosition(frontRightDrive.getCurrentPosition() + 1);
-            backLeftDrive.setTargetPosition(backLeftDrive.getCurrentPosition() + 1);
-            backRightDrive.setTargetPosition(backRightDrive.getCurrentPosition() + 1);
+            frontLeftDrive.setTargetPosition(frontLeftDrive.getCurrentPosition() + 5);
+            frontRightDrive.setTargetPosition(frontRightDrive.getCurrentPosition() + 5);
+            backLeftDrive.setTargetPosition(backLeftDrive.getCurrentPosition() + 5);
+            backRightDrive.setTargetPosition(backRightDrive.getCurrentPosition() + 5);
             setPowers(0.4*directionModifier);
         }
 

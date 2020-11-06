@@ -37,7 +37,7 @@ public class UltimateGoalTeleOp extends LinearOpMode {
     double liftPosition = 0;
     double elbowPosition = 0;
 
-    int sensitivity = 3;
+    int sensitivity = 4;
 
     @Override
     public void runOpMode() {
@@ -139,12 +139,10 @@ public class UltimateGoalTeleOp extends LinearOpMode {
 
             //wobble arm
             liftPosition += gamepad2.left_stick_y*sensitivity;
-            //liftPosition = Range.clip(liftPosition, -5000, 5000);
             wobbleLiftMotor.setTargetPosition((int) liftPosition);
 
             //wobble elbow
             elbowPosition += gamepad2.right_stick_y*sensitivity;
-            //elbowPosition = Range.clip(elbowPosition, -5000, 5000); //change depending on the max/min position where 0 is start position (where encoders are reset)
             elbowDriveMotor.setTargetPosition((int) -elbowPosition);
 
 
