@@ -22,7 +22,13 @@ public class UltimateGoalAutoDriveToLine extends AutoController {
         waitForStart();
         runtime.reset();
 
-        moveToLine(1);
+        encodersWorking();
+
+        while (opModeIsActive() && (runtime.seconds() < 2.5)) {
+
+            setPowers(-0.4);
+
+        }
 
     }
 

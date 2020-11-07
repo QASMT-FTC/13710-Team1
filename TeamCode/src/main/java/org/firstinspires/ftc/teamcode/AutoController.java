@@ -214,7 +214,7 @@ public abstract class AutoController extends LinearOpMode {
     }
 
     public void forward(int dist, double power) {
-        dist = (dist*32)/16;
+        dist = (dist/2);
         frontLeftDrive.setTargetPosition(dist);
         frontRightDrive.setTargetPosition(dist);
         backLeftDrive.setTargetPosition(dist);
@@ -223,7 +223,7 @@ public abstract class AutoController extends LinearOpMode {
 }
 
     public void strafe(int dist, double power) {
-        dist = (dist*32)/16; //sprokets are 52 tooth to 36 tooth
+        dist = (dist/2); //sprokets are 32 tooth to 16 tooth
         frontLeftDrive.setTargetPosition(dist);
         frontRightDrive.setTargetPosition(-dist);
         backLeftDrive.setTargetPosition(-dist);
